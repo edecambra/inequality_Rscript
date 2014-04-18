@@ -7,20 +7,28 @@ This is the readme file to document the transforms to the main data file of micr
 You will need to get the data from my dropbox acc, 
 The url is: https://www.dropbox.com/s/8nieffgdtoa3o2h/main.csv.gz
 or in R:
-```{r}
+
+```r
 # Save the data from my Dropbox
-download.file(url ="https://dl.dropboxusercontent.com/s/8nieffgdtoa3o2h/main.csv.gz?dl=1&token_hash=AAF6h_8ek1ftVN2DtEc5yANBg4yMJiMMdrpzxN3ikisgCg"
-              , destfile = "main.csv.gz")
+download.file(url = "https://dl.dropboxusercontent.com/s/8nieffgdtoa3o2h/main.csv.gz?dl=1&token_hash=AAF6h_8ek1ftVN2DtEc5yANBg4yMJiMMdrpzxN3ikisgCg", 
+    destfile = "main.csv.gz")
 ```
+
+```
+## Error: unsupported URL scheme
+```
+
 
 
 The main CSV file is compressed in gzip format.  Use Rtools to compress or decompress this via the following code. Note, the path is to where you have installed Rtools in your machine (windows only).
-```{r}
-#to compress csv file:
-system("c:/Rtools/bin/gzip main.csv")   #note main refers to working Dir
-#to decompress csv file:
+
+```r
+# to compress csv file:
+system("c:/Rtools/bin/gzip main.csv")  #note main refers to working Dir
+# to decompress csv file:
 system("c:/Rtools/bin/gzip -d main.csv.gz")
 ```
+
 
 ## Loading a Flat File using ff commands:
 
