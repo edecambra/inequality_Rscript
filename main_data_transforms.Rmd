@@ -1,0 +1,31 @@
+# Notes to Accompany main_data_transforms.R
+========================================================
+
+
+This is the readme file to document the transforms to the main data file of micro contracts, which shows how the aggregation and transformations were conducted prior to the analysis.  
+
+You will need to get the data from my dropbox acc: 
+The url is:
+or in R:
+```{r}
+# Save the data from my Dropbox
+download.file(url ="", destfile = "main.csv.gz")
+```
+
+
+The main CSV file is compressed in gzip format.  Use Rtools to compress or decompress this via the following code. Note, the path is to where you have installed Rtools in your machine (windows only).
+```{r}
+#to compress csv file:
+system("c:/Rtools/bin/gzip main.csv")   #note main refers to working Dir
+#to decompress csv file:
+system("c:/Rtools/bin/gzip -d main.csv.gz")
+```
+
+## Loading a Flat File using ff commands:
+
+To manipulate this file in R, you cannot load it all into memory, the uncompressed data file is over 3gb and R quickly hogs the rest of your machine's ram.  the ff, and ffbase package allow for reading of this file in packets stored on your local drive.  
+
+There are some quirks to this package though, and the classes of each variable had to be set to factors (if char or int) and double (if numeric) to allow the format to read them.  
+
+
+
