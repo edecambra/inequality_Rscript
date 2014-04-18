@@ -21,23 +21,15 @@ main.ff$start_date <- with(main.ff, as.Date(start_date, "%d%b%Y"))
 main.ff$end_date <- with(main.ff, as.Date(end_date, "%d%b%Y"))
 main.ff$year <- with(main.ff, as.integer(format(start_date, "%Y")))
 main.ff$fips <- with(main.ff, as.integer(fips))
-agg <- ffdfdply(x = main.ff, 
+system.time(agg <- ffdfdply(x = main.ff, 
                 split = main.ff$fips,
                 FUN = function(x){
                   require(doBy)
                   summaryBy(spend~year + fips, data = x, keep.names = T, FUN = sum, na.rm = T)
                   },
-                BATCHBYTES = 10000, trace = T)
+                BATCHBYTES = 10000, trace = T))
 agg.tab <- as.data.frame(agg)                
 
-agg.2 <- ffdfdply(x = main.ff, 
-                split = main.ff$fips,
-                FUN = function(x){
-                  require(doBy)
-                  summaryBy(spend~year, data = x, keep.names = T, FUN = sum, na.rm = T)
-                },
-                BATCHBYTES = 10000, trace = T)
-agg.tab2 <- as.data.frame(agg)
 
 
 state.codes <- read.csv(file = "statemastercodelist.csv")
@@ -53,6 +45,9 @@ colnames(extra.state) <- c("usspend", "pop", "nom.spend", "nom.gsp", "deflator",
 suppliment <- merge(frank, state.codes, by = "state", all = TRUE)
 suppliment <- merge(suppliment, inflation, by = "year", all = TRUE)
 suppliment <- merge(suppliment, extra.state, by = c("fips", "year"), all = TRUE)
+write.csv(suppliment, file = "suppliment.csv")
+system("c:/Rtools/bin/gzip suppliment.csv")
+system("c:/Rtools/bin/gzip -d suppliment.csv.gz")
 
 data <- merge(agg.tab, suppliment, by = c("fips", "year"), all = TRUE)
 
