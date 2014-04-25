@@ -183,21 +183,21 @@ hljs.initHighlightingOnLoad();
 
 <h1></h1>
 
-<p>This is the readme file to document the transforms to the main data file of micro contracts, which shows how the aggregation and transformations were conducted prior to the analysis.  </p>
+<p>This is the readme file to document the transforms to the main data file of micro contracts, which shows how the aggregation and transformations were conducted prior to the analysis of.  The Headings correspond to their respecitve blocks of code in main_data_transforms.R script.   </p>
 
-<p>You will need to get the data from my dropbox acc, 
+<p>You will need to get the micro level military data from my dropbox acc, 
 The url is: <a href="https://www.dropbox.com/s/8nieffgdtoa3o2h/main.csv.gz">https://www.dropbox.com/s/8nieffgdtoa3o2h/main.csv.gz</a>
 or in R:</p>
 
 <pre><code class="r"># Save the data from my Dropbox
 download.file(url = &quot;https://dl.dropboxusercontent.com/s/8nieffgdtoa3o2h/main.csv.gz?dl=1&amp;token_hash=AAF6h_8ek1ftVN2DtEc5yANBg4yMJiMMdrpzxN3ikisgCg&quot;, 
-    destfile = &quot;main.csv.gz&quot;)
+    destfile = &quot;main.csv.gz&quot;, mode = &quot;wb&quot;)
 </code></pre>
 
 <pre><code>## Error: unsupported URL scheme
 </code></pre>
 
-<p>The main CSV file is compressed in gzip format.  Use Rtools to compress or decompress this via the following code. Note, the path is to where you have installed Rtools in your machine (windows only).</p>
+<p>The main CSV file is compressed in gzip format.  Use Rtools to compress or decompress this via the following code. Note, the path is to where you have installed Rtools in your machine (windows only, of course). Use these commands on any of the .gz file extensions analagously if desired, but R reads the compressed files directly so this step is optional. </p>
 
 <pre><code class="r"># to compress csv file:
 system(&quot;c:/Rtools/bin/gzip main.csv&quot;)  #note main refers to working Dir
@@ -211,9 +211,54 @@ system(&quot;c:/Rtools/bin/gzip -d main.csv.gz&quot;)
 
 <p>There are some quirks to this package though, and the classes of each variable had to be set to factors (if char or int) and double (if numeric) to allow the format to read them.  </p>
 
+<p>Also using the ff package enables you to keep the native data in memory, and access micro contract statistics on the fly without consuming all of your computer&#39;s resources</p>
+
+<p>For example, my machine (i7 quad core, 64 bit R v2.15.2, with 16 gb ram) loads the file into memory using read.csv.ffdf() in roughly 517.85 sec (~8min), and aggregates by state-year pairs in 256.13 sec (~4min).  </p>
+
 <h2>Processing the files</h2>
 
 <p>After resetting the classes of the flat file variables, they can be processed in chunks using ffdfdply() on chuncks of the file by state, then prossing summaryBy() to aggregate chuncks up to the state-year pairs.  </p>
+
+<h2>Supplimental Data</h2>
+
+<p>Finally we couple the aggregated military spending state-year data points with data outside of the form DD 350.  Here we use the following data sources.</p>
+
+<p>The Inequality file is constructed by Mark Frank, with information on his site here: <a href="http://www.shsu.edu/eco_mwf/inequality.html">http://www.shsu.edu/eco_mwf/inequality.html</a>, and I am using the six measures, main data file.  </p>
+
+<pre><code class="r"># Save the data from my Dropbox
+download.file(url = &quot;http://www.shsu.edu/eco_mwf/Frank_All_v96a.csv&quot;, destfile = &quot;Frank_All_v96a.csv&quot;, 
+    mode = &quot;w&quot;)
+</code></pre>
+
+<p>Supplimental files are located here:
+<a href="https://www.dropbox.com/s/cskwo3cbqbynfwx/statemastercodelist.csv.gz">https://www.dropbox.com/s/cskwo3cbqbynfwx/statemastercodelist.csv.gz</a> for each file&#39;s state id coding, 
+<a href="https://www.dropbox.com/s/nx4nleq4ux4xlnw/inflation.csv.gz">https://www.dropbox.com/s/nx4nleq4ux4xlnw/inflation.csv.gz</a> for annyal CPI inflation measures, and 
+<a href="https://www.dropbox.com/sh/d28kx8p4agd9rn8/L1PHM_iMWq">https://www.dropbox.com/sh/d28kx8p4agd9rn8/L1PHM_iMWq</a> for various state indicators like GSP, population, employment etc. </p>
+
+<p>in R</p>
+
+<pre><code class="r">download.file(url = &quot;https://dl.dropboxusercontent.com/s/cskwo3cbqbynfwx/statemastercodelist.csv.gz?dl=1&amp;token_hash=AAEv-bUzZvdLgIHvUfr0kJCXogBgbqOD5R3ROi93_ov-mg&quot;, 
+    destfile = &quot;statemastercodelist.csv.gz&quot;, mode = &quot;wb&quot;)
+</code></pre>
+
+<pre><code>## Error: unsupported URL scheme
+</code></pre>
+
+<pre><code class="r">download.file(url = &quot;https://dl.dropboxusercontent.com/s/nx4nleq4ux4xlnw/inflation.csv.gz?dl=1&amp;token_hash=AAFFs3xzBd0XY9ju4hBagnQFPurYt7O-N5Y2DTh9uN19Fw&quot;, 
+    destfile = &quot;inflation.csv.gz&quot;, mode = &quot;wb&quot;)
+</code></pre>
+
+<pre><code>## Error: unsupported URL scheme
+</code></pre>
+
+<pre><code class="r">download.file(url = &quot;https://dl.dropboxusercontent.com/s/ojbpcqktswkhdhz/extra.state.CSV.gz?dl=1&amp;token_hash=AAG1vhkz9maBbZZq72lMNJsxpojDNlExTvdVjEpUnxSpFg&quot;, 
+    destfile = &quot;extra.state.csv.gz&quot;, mode = &quot;wb&quot;)
+</code></pre>
+
+<pre><code>## Error: unsupported URL scheme
+</code></pre>
+
+<p>These data sources are used in the program script, and together with the main data file used initially, the program yields an aggregate data source object called data, and writes the csv table to file</p>
 
 </body>
 
