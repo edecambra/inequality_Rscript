@@ -1,0 +1,4 @@
+# Panel Regression Documents
+========================================================
+This article is to serve as a readme file for the panel_regressions. R script in this directory.  These scripts import the data from main_data_transforms.R, and perform subsequent estimations used in the analysis in the document....
+
